@@ -32,9 +32,9 @@ export const Warning = () => {
   const supportedChainNames = SUPPORTED_CHAINS.map((id) => chains[id]?.name).join(", ");
 
   if (!isMetaMask) {
-    warning = "No MetaMask found, MetaMask is required to interact.";
+    warning = "No MetaMask found, MetaMask is required to interact with this dApp";
   } else if (!isActive) {
-    warning = `Connect your wallet to start, supported chains: ${supportedChainNames}`;
+    warning = `Connect your wallet to Polygon Mainnet to start`;
   } else if (!isValidChainId(chainId)) {
     warning = `Invalid chain, supported chains: ${supportedChainNames}`;
   }
