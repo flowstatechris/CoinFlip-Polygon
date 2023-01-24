@@ -22,7 +22,7 @@ export const Transaction = ({ hash, wait }) => {
   const [isHiding, setIsHiding] = useState();
   const [isHidden, setIsHidden] = useState();
   const [hasError, setHasError] = useState();
-  const etherScanAddress = useEtherScanLink(hash, "tx");
+  const etherScanAddress = useEtherScanLink(hash);
 
   useEffect(() => {
     if (wait) {

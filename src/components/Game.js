@@ -115,10 +115,10 @@ export const Game = () => {
         </p>
         <StyledCoinWrapper>
           <div onClick={() => handleBet(0)}>
-            <HeadsCoin betChoice={0} onClick={doFlip} />
+            <HeadsCoin onClick={doFlip} />
           </div>
           <div onClick={() => handleBet(1)}>
-            <TailsCoin betChoice={1} onClick={doFlip} />
+            <TailsCoin onClick={doFlip} />
           </div>
         </StyledCoinWrapper>
       </div>
