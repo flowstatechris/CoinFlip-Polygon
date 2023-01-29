@@ -17,7 +17,7 @@ const StyledHeader = styled.div`
 export const Header = () => (
   <StyledHeader>
     <div>
-      <Logo> CoinFlip - Double your MATIC </Logo>
+      <Logo> H.N.I.C. CoinFlip - Double your MATIC </Logo>
     </div>
     <div>
       <ConnectButton />
