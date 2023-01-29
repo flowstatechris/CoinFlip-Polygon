@@ -1,5 +1,5 @@
 //export const COINFLIP_ADDRESS = "0x6d9AeE60C87f97BF3Cdce3d59C6c6C2e80F301ca"; // VRF v1 on Kovan
 // export const COINFLIP_ADDRESS = "0x5611547ae21E7d4d0235f4fFA5b4175e63343aA4"; // VRF v2 on Rinkeby
-export const COINFLIP_ADDRESS = "0x98c1f80289dd22d6879e9b4d80700252f88d9352"; // VRF v2 on Goerli
+export const COINFLIP_ADDRESS = "0xd5Ec1E8f54365C414c4123Fb27dac04675F72190"; // VRF v2 on Goerli
 export const SUPPORTED_CHAINS = [137];
 export const WAITFOR_CONFIRMATIONS = 2;
