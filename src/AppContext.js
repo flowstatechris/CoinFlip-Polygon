@@ -81,6 +81,21 @@ export const AppContextProvider = ({ children }) => {
     [notifications]
   );
 
+  const settings = {
+    apiKey: process.env.ALCHEMY_API_KEY,
+    network: Network.MATIC_MAINNET,
+  };
+
+  const alchemy = new Alchemy(settings);
+
+  // Get the latest block
+  const latestBlock = alchemy.core.getBlockNumber();
+
+  // Get all outbound transfers for a provided address
+  alchemy.core
+    .getTokenBalances('0x96C8eDA0813D75ab442cc7107A3964390986a77C')
+    .then(console.log);
+
   return (
     <AppContext.Provider
       value={{
@@ -97,6 +112,8 @@ export const AppContextProvider = ({ children }) => {
         contractBalance,
         getContractBalance,
         syncAll,
+        alchemy,
+        latestBlock,
       }}
     >
       {children}
