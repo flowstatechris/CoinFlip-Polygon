@@ -3,6 +3,7 @@ import { useReadFunction } from "./hooks/useReadFunction";
 import { useWallet } from "./hooks/useWallet";
 import { formatResult } from "./utils/formatResult";
 import { v4 as uuidv4 } from "uuid";
+import { Network, Alchemy } from "alchemy-sdk";
 
 const AppContext = React.createContext({});
 const DEFAULT_THEME = "dark";
@@ -93,7 +94,7 @@ export const AppContextProvider = ({ children }) => {
 
   // Get all outbound transfers for a provided address
   alchemy.core
-    .getTokenBalances('0x96C8eDA0813D75ab442cc7107A3964390986a77C')
+    .getTokenBalances("0x96C8eDA0813D75ab442cc7107A3964390986a77C")
     .then(console.log);
 
   return (

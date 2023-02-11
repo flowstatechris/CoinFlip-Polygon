@@ -3,3 +3,4 @@ build/
 yarn.lock
 package-lock.json
 coinFlip.js
+AppContext.js
