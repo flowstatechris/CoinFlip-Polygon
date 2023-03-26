@@ -111,7 +111,7 @@ export const Game = () => {
             opacity: 0.91,
           }}
         >
-          Minimum required bet: <Eth>0.001</Eth>
+          Minimum required bet: <Eth>1</Eth>
         </p>
         <StyledCoinWrapper>
           <div onClick={() => handleBet(0)}>
