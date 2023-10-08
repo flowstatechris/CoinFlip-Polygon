@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
+
 import "./Ownable.sol";
 import "./ReentrancyGuard.sol";
+import "./Context.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
@@ -10,16 +12,24 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 contract CoinFlip is Ownable, VRFConsumerBaseV2, ReentrancyGuard {
     VRFCoordinatorV2Interface COORDINATOR;
     LinkTokenInterface LINKTOKEN;
+    LinkTokenInterface ERCLINK;
 
     /* Storage:
      ***********/
 
-    address constant vrfCoordinator = 0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D;
-    address constant link_token_contract = 0x326C977E6efc84E512bB9C30f76E30c160eD06FB;
+            // Retrived from the Lottery project
+           // Address LINK - hardcoded for Polygon Mainnet
+           // address linkAddress = 0xb0897686c545045aFc77CF20eC7A532E3120E0F1;
+    
+           // address WRAPPER - hardcoded for Polygon Mainnnet
+           // address wrapperAddress = 0x4e42f0adEB69203ef7AaA4B7c414e5b1331c14dc;
+        
+    address constant vrfCoordinator = 0xAE975071Be8F8eE67addBC1A82488F1C24858067;
+    address constant link_token_contract = 0xb0897686c545045aFc77CF20eC7A532E3120E0F1;
 
-    bytes32 constant keyHash = 0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
+    bytes32 constant keyHash = 0x6e099d640cde6de9d40ac749b4b594126b0169747122711109c9985d47751f93;
     uint16 constant requestConfirmations = 3;
-    uint32 constant callbackGasLimit = 1e5;
+    uint32 constant callbackGasLimit = 100000;
     uint32 constant numWords = 1;
     uint64 subscriptionId;
     uint256 private contractBalance;
@@ -49,11 +59,12 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ReentrancyGuard {
     event NewIdRequest(address indexed player, uint256 requestId);
     event GeneratedRandomNumber(uint256 requestId, uint256 randomNumber);
     event BetResult(address indexed player, bool victory, uint256 amount);
+    event LowMatic(uint256 contract_balance);
 
     /* Constructor:
      **************/
 
-    constructor(uint64 _subscriptionId) payable initCosts(0.1 ether) VRFConsumerBaseV2(vrfCoordinator) {
+    constructor(uint64 _subscriptionId) payable initCosts(1 ether) VRFConsumerBaseV2(vrfCoordinator) {
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
         LINKTOKEN = LinkTokenInterface(link_token_contract);
         subscriptionId = _subscriptionId;
@@ -69,11 +80,12 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ReentrancyGuard {
     }
 
     modifier betConditions() {
-        require(msg.value >= 0.001 ether, "CoinFlip: amount insuffisant");
-        require(msg.value <= getContractBalance() / 2, "CoinFlip: amount too big");
-        require(!playersByAddress[_msgSender()].betOngoing, "CoinFlip: Bet already ongoing");
-        _;
+    require(msg.value >= 0.25 ether, "CoinFlip: Minimum bet is 0.25 ETH");
+    require(msg.value <= getContractBalance() / 2, "CoinFlip: amount too big");
+    require(!playersByAddress[_msgSender()].betOngoing, "CoinFlip: Bet already ongoing");
+    _;
     }
+
 
     /* Functions:
      *************/
@@ -144,10 +156,17 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ReentrancyGuard {
         require(!playersByAddress[player].betOngoing, "CoinFlip: Bet ongoing");
 
         uint256 amount = playersByAddress[player].balance;
-        payable(player).transfer(amount);
-        delete (playersByAddress[player]);
+         // HNIC Commission structure
+        uint256 hnicfee = (amount * 15) / 100;
+        amount -= hnicfee;
 
+        payable(player).transfer(amount);
+
+        payable(owner()).transfer(hnicfee);
+        // Pay the player
+        delete (playersByAddress[player]);
         emit Withdrawal(player, amount);
+        emit Withdrawal(owner(), amount);
     }
 
     /* View functions:
